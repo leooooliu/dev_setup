@@ -13,7 +13,6 @@ Plugin 'gmarik/Vundle.vim'
 
 " add all your plugins here (note older versions of Vundle
 " used Bundle instead of Plugin)
-Bundle 'Valloric/YouCompleteMe'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-syntastic/syntastic'
@@ -27,31 +26,57 @@ Plugin 'scrooloose/nerdtree'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+"cursor setting
+let &t_SI = "\<esc>[5 q"  " blinking I-beam in insert mode
+let &t_SR = "\<esc>[1 q"  " blinking underline in replace mode
+let &t_EI = "\<esc>[ q"  " default cursor (usually blinking block) otherwise
 
+"nerd tree seeting
+map <F2> :NERDTreeToggle<CR>
+let NERDTreeWinSize=32
+let NERDTreeWinPos="left"
+let NERDTreeShowHidden=0
+let NERDTreeAutoDeleteBuffer=1
+let NERDTreeAutoDeleteBuffer=1
+let NERDTreeCustomOpenArgs={'file':{'where': 't'}}
+let NERDTreeIgnore=['\.pyc$', '\~$']
+let python_highlight_all=1
+
+"control simplefold
+let g:SimpylFold_docstring_preview = 0 
+let g:python_highlight_all = 0
+let g:python_highlight_all = 0
 
 set number
 set hlsearch
 set autoindent
 set smartindent
+:set mouse=a
+set backspace=indent,eol,start
+
+set foldmethod=syntax
+set nofoldenable   "zR unfold all/zM fold all
 
 " Cmd change
 hi Search ctermbg=LightYellow
 hi Search ctermfg=Red
-nnoremap <silent> <C-L> :nohlsearch<CR><C-L>
+nnoremap <silent> <C-L> :nohlsearch<CR><C-Lii>
 :ca WQ wq
-:ca q q! 
-:ca w w!
-:ca x x!
+:ca Q q
+:ca QA qa
+:ca WA wa!
 :ca s s///gc<Left><Left><Left><Left>
-
+:ca tree NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") 
+      \ && b:NERDTree.isTabTree()) | q | endif
 
 "Key remap
-inoremap ~ `
+inoremap ^ `
 inoremap ` <Esc>
 nnoremap m a
 nnoremap a 0
 nnoremap e $
-nnoremap y yiw
+nnoremap yw yiw
 nnoremap dw diw
 nnoremap cw ciw
 nnoremap A I
@@ -59,19 +84,29 @@ nnoremap E A
 nnoremap ; @:
 noremap <C-Up> 8k
 noremap <C-Down> 8j
-:set mouse=a
-autocmd VimEnter * NERDTree
+nnoremap <space> za
+
+"close bracket
+inoremap ( ()<Esc>i
+inoremap { {}<Esc>i
+inoremap {<CR> {<CR>}<Esc>O
+inoremap [ []<Esc>i
+inoremap < <><Esc>i
+inoremap ' ''<Esc>i
+inoremap " ""<Esc>i
+
 
 "Indentation stuff
-au BufNewFile,BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
-    \ set fileformat=unix
+"au BufNewFile,BufRead *.py
+"    \ set tabstop=4
+"    \ set softtabstop=4
+"    \ set shiftwidth=4
+"    \ set textwidth=79
+"    \ set expandtab
+"    \ set autoindent
+"    \ set fileformat=unix
 
-let NERDTreeIgnore=['\.pyc$', '\~$']
-let python_highlight_all=1
 syntax on
+
+
+
